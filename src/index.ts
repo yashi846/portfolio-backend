@@ -31,12 +31,8 @@ app.get("/api/works", async (req, res) => {
 
     // JSONの整形
     const formattedWorks = works.map((work: any) => {
-      const translation = work.translations[0];
-      delete (work as any).translations;
-      return {
-        ...work,
-        ...translation,
-      };
+      const { translations, ...workData } = work;
+      return workData;
     });
 
     res.json(formattedWorks);
