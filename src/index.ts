@@ -9,9 +9,39 @@ const port = process.env.PORT || 3001; // RenderなどはPORT環境変数を参�
 // ミドルウェアの設定
 app.use(cors()); // CORSを許可
 app.get("/api/works", async (req, res) => {
+  const lang = req.query.lang as string;
+  if (!lang) {
+    return res
+      .status(400)
+      .json({ error: 'Language query parameter lang is required' });
+  } else if (lang !== "ja" && lang !== "en") {
+    return res
+      .status(400)
+      .json({ error: 'This lang parameter is not valid' });
+  }
+
   try {
-    const activities = await prisma.work.findMany();
-    res.json(activities);
+    const works = await prisma.work.findMany({
+      include: {
+        translations: {
+          where: {
+            language: lang,
+          },
+        },
+      },
+    });
+
+    // JSONの整形
+    const formattedWorks = works.map(work => {
+      const translation = work.translations[0];
+      delete (work as any).translations;
+      return {
+        ...work,
+        ...translation
+      }
+    })
+
+    res.json(formattedWorks);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch works" });
   }

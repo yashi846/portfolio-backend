@@ -14,15 +14,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model work {
+model Work {
   id                  String   @id @default(cuid())
-  title               String    @unique
-  shortDescription    String
-  description         String
-  technicalHighlights Json
   language            Json
   framework           Json?
   repositoryUrl       String
   imageUrl            String?
   imageAlt            String?
+  translations WorkTranslation[]
+}
+
+model WorkTranslation {
+  id                  String    @id @default(cuid())
+  language            String
+  title               String
+  shortDescription    String
+  description         String
+  technicalHighlights Json
+
+  workId String
+  work   Work   @relation(fields: [workId], references: [id], onDelete: Cascade)
+  @@unique([workId, language])
 }
