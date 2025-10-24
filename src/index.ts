@@ -13,11 +13,9 @@ app.get("/api/works", async (req, res) => {
   if (!lang) {
     return res
       .status(400)
-      .json({ error: 'Language query parameter lang is required' });
+      .json({ error: "Language query parameter lang is required" });
   } else if (lang !== "ja" && lang !== "en") {
-    return res
-      .status(400)
-      .json({ error: 'This lang parameter is not valid' });
+    return res.status(400).json({ error: "This lang parameter is not valid" });
   }
 
   try {
@@ -32,14 +30,14 @@ app.get("/api/works", async (req, res) => {
     });
 
     // JSONの整形
-    const formattedWorks = works.map(work => {
+    const formattedWorks = works.map((work: any) => {
       const translation = work.translations[0];
       delete (work as any).translations;
       return {
         ...work,
-        ...translation
-      }
-    })
+        ...translation,
+      };
+    });
 
     res.json(formattedWorks);
   } catch (error) {
