@@ -13,3 +13,16 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model work {
+  id                  String   @id @default(cuid())
+  title               String    @unique
+  shortDescription    String
+  description         String
+  technicalHighlights Json
+  language            Json
+  framework           Json?
+  repositoryUrl       String
+  imageUrl            String?
+  imageAlt            String?
+}
