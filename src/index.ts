@@ -29,10 +29,17 @@ app.get("/api/works", async (req, res) => {
       },
     });
 
-    // JSONの整形
+    // JSONの整形 langに該当する要素の削除
     const formattedWorks = works.map((work: any) => {
       const { translations, ...workData } = work;
-      return workData;
+      const translation = (translations && translations[0]) || {};
+      const { language: _translationLanguage, ...translationRest } =
+        translation;
+
+      return {
+        ...workData,
+        ...translationRest,
+      };
     });
 
     res.json(formattedWorks);
