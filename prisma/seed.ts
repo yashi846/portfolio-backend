@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 const worksData = [
   {
     repositoryUrl: "https://github.com/yashi846/portfolio-frontend",
+    order: 1,
     imageUrl: "/images/works/portfolio-frontend.png",
     imageAlt: "Portfolio website frontend screenshot",
     language: ["TypeScript"],
@@ -36,27 +37,31 @@ const worksData = [
   },
   {
     repositoryUrl: "https://github.com/yashi846/portfolio-backend",
-    imageUrl: "/images/works/portfolio-backend.png",
-    imageAlt: "Portfolio website backend screenshot",
-    language: ["Python", "JavaScript"],
-    framework: ["React"],
+    order: 2,
+    imageUrl: "",
+    imageAlt: "",
+    language: ["TypeScript"],
+    framework: ["Express", "Prisma"],
     translations: {
       ja: {
         title: "ポートフォリオサイト バックエンド",
         shortDescription: "ポートフォリオサイトのバックエンド",
-        description: "鋭意制作中",
+        description:
+          "Express と Prisma を使って Postgres（Neon）に接続し、作品データを返します。",
         technicalHighlights: ["初めてのサイト制作", "初めてのバックエンド"],
       },
       en: {
         title: "Portfolio Website Backend",
         shortDescription: "Portfolio website backend",
-        description: "Making",
+        description:
+          "Connect to Postgres (Neon) using Express and Prisma, and return the works data.",
         technicalHighlights: ["First website project", "First backend"],
       },
     },
   },
   {
     repositoryUrl: "https://github.com/yashi846/shooting-game",
+    order: 3,
     imageUrl: "/images/works/shooting-game.png",
     imageAlt: "Shooting game screenshot",
     language: ["Blueprint"],
@@ -80,6 +85,7 @@ const worksData = [
   },
   {
     repositoryUrl: "https://github.com/yashi846/speed_game",
+    order: 4,
     imageUrl: "/images/works/speed-game.jpg",
     imageAlt: "Speed game screenshot",
     language: ["Blueprint"],
@@ -113,7 +119,8 @@ async function main() {
   await prisma.workTranslation.deleteMany(); // 既存のデータの削除
   await prisma.work.deleteMany();
 
-  for (const workData of worksData) {
+  for (let i = 0; i < worksData.length; i++) {
+    const workData = worksData[i];
     const work = await prisma.work.create({
       data: {
         repositoryUrl: workData.repositoryUrl,
@@ -121,6 +128,7 @@ async function main() {
         imageAlt: workData.imageAlt,
         language: workData.language,
         framework: workData.framework,
+        sortOrder: i,
         translations: {
           create: [
             {

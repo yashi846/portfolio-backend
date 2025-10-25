@@ -31,7 +31,7 @@ app.get("/api/works", async (req, res) => {
 
     // JSONの整形 langに該当する要素の削除
     const formattedWorks = works.map((work: any) => {
-      const { translations, ...workData } = work;
+        const { translations, sortOrder, ...workData } = work;
       const translation = (translations && translations[0]) || {};
       const { language: _translationLanguage, ...translationRest } =
         translation;
